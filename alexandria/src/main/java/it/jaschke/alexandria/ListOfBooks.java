@@ -7,14 +7,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import it.jaschke.alexandria.api.BookListAdapter;
 import it.jaschke.alexandria.api.Callback;
 import it.jaschke.alexandria.data.AlexandriaContract;
@@ -23,9 +25,9 @@ import it.jaschke.alexandria.data.AlexandriaContract;
 public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private BookListAdapter bookListAdapter;
-    private ListView bookList;
+    @Bind(R.id.listOfBooks) ListView bookList;
     private int position = ListView.INVALID_POSITION;
-    private EditText searchText;
+    @Bind(R.id.searchText) SearchView searchText;
 
     private final int LOADER_ID = 10;
 
@@ -51,52 +53,55 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
-        searchText = (EditText) rootView.findViewById(R.id.searchText);
-        rootView.findViewById(R.id.searchButton).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ListOfBooks.this.restartLoader();
-                    }
-                }
-        );
+        ButterKnife.bind(this, rootView);
 
-        bookList = (ListView) rootView.findViewById(R.id.listOfBooks);
-        bookList.setAdapter(bookListAdapter);
-
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                ListOfBooks.this.restartLoader();
+                return true;
+            }
 
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = bookListAdapter.getCursor();
-                if (cursor != null && cursor.moveToPosition(position)) {
-                    ((Callback)getActivity())
-                            .onItemSelected(cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
-                }
+            public boolean onQueryTextChange(String newText) {
+                ListOfBooks.this.restartLoader();
+                return true;
             }
         });
+
+        bookList.setAdapter(bookListAdapter);
+
 
         return rootView;
     }
 
-    private void restartLoader(){
+    @OnItemClick(R.id.listOfBooks)
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Cursor cursor = bookListAdapter.getCursor();
+        if (cursor != null && cursor.moveToPosition(position)) {
+            ((Callback) getActivity())
+                    .onItemSelected(cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
+        }
+    }
+
+    private void restartLoader() {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        final String selection = AlexandriaContract.BookEntry.TITLE +" LIKE ? OR " + AlexandriaContract.BookEntry.SUBTITLE + " LIKE ? ";
-        String searchString =searchText.getText().toString();
+        final String selection = AlexandriaContract.BookEntry.TITLE + " LIKE ? OR " + AlexandriaContract.BookEntry.SUBTITLE + " LIKE ? ";
+        String searchString = searchText.getQuery().toString();
 
-        if(searchString.length()>0){
-            searchString = "%"+searchString+"%";
+        if (searchString.length() > 0) {
+            searchString = "%" + searchString + "%";
             return new CursorLoader(
                     getActivity(),
                     AlexandriaContract.BookEntry.CONTENT_URI,
                     null,
                     selection,
-                    new String[]{searchString,searchString},
+                    new String[]{searchString, searchString},
                     null
             );
         }
