@@ -3,7 +3,11 @@ package it.jaschke.alexandria;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.test.AndroidTestCase;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Map;
 import java.util.Set;
@@ -11,10 +15,14 @@ import java.util.Set;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.data.DbHelper;
 
+import static org.assertj.android.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Created by saj on 23/12/14.
  */
-public class TestDb extends AndroidTestCase {
+@RunWith(AndroidJUnit4.class)
+public class TestDb {
     public static final String LOG_TAG = TestDb.class.getSimpleName();
 
     public final static long ean = 9780137903955L;
@@ -25,23 +33,24 @@ public class TestDb extends AndroidTestCase {
     public final static String author = "Stuart Jonathan Russell";
     public final static String category = "Computers";
 
+    @Test
     public void testCreateDb() throws Throwable {
-        mContext.deleteDatabase(DbHelper.DATABASE_NAME);
-        SQLiteDatabase db = new DbHelper(
-                this.mContext).getWritableDatabase();
-        assertEquals(true, db.isOpen());
+        InstrumentationRegistry.getTargetContext().deleteDatabase(DbHelper.DATABASE_NAME);
+        SQLiteDatabase db = new DbHelper(InstrumentationRegistry.getTargetContext()).getWritableDatabase();
+        assertThat(db).isOpen();
         db.close();
     }
 
+    @Test
     public void testInsertReadDb() {
 
-        DbHelper dbHelper = new DbHelper(mContext);
+        DbHelper dbHelper = new DbHelper(InstrumentationRegistry.getTargetContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = getBookValues();
 
         long retEan = db.insert(AlexandriaContract.BookEntry.TABLE_NAME, null, values);
-        assertEquals(ean, retEan);
+        assertThat(ean).isEqualTo(retEan);
 
         String[] columns = {
                 AlexandriaContract.BookEntry._ID,
@@ -113,15 +122,15 @@ public class TestDb extends AndroidTestCase {
 
     static void validateCursor(Cursor valueCursor, ContentValues expectedValues) {
 
-        assertTrue(valueCursor.moveToFirst());
+        assertThat(valueCursor.moveToFirst()).isTrue();
 
         Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();
         for (Map.Entry<String, Object> entry : valueSet) {
             String columnName = entry.getKey();
             int idx = valueCursor.getColumnIndex(columnName);
-            assertFalse(columnName,idx == -1);
+            assertThat(idx).isNotEqualTo(-1);
             String expectedValue = entry.getValue().toString();
-            assertEquals(expectedValue, valueCursor.getString(idx));
+            assertThat(valueCursor.getString(idx)).isEqualTo(expectedValue);
         }
         valueCursor.close();
     }
@@ -140,7 +149,7 @@ public class TestDb extends AndroidTestCase {
 
     public static ContentValues getAuthorValues() {
 
-        final ContentValues values= new ContentValues();
+        final ContentValues values = new ContentValues();
         values.put(AlexandriaContract.AuthorEntry._ID, ean);
         values.put(AlexandriaContract.AuthorEntry.AUTHOR, author);
 
@@ -149,7 +158,7 @@ public class TestDb extends AndroidTestCase {
 
     public static ContentValues getCategoryValues() {
 
-        final ContentValues values= new ContentValues();
+        final ContentValues values = new ContentValues();
         values.put(AlexandriaContract.CategoryEntry._ID, ean);
         values.put(AlexandriaContract.CategoryEntry.CATEGORY, category);
 
@@ -158,7 +167,7 @@ public class TestDb extends AndroidTestCase {
 
     public static ContentValues getFullDetailValues() {
 
-        final ContentValues values= new ContentValues();
+        final ContentValues values = new ContentValues();
         values.put(AlexandriaContract.BookEntry.TITLE, title);
         values.put(AlexandriaContract.BookEntry.IMAGE_URL, imgUrl);
         values.put(AlexandriaContract.BookEntry.SUBTITLE, subtitle);
@@ -170,7 +179,7 @@ public class TestDb extends AndroidTestCase {
 
     public static ContentValues getFullListValues() {
 
-        final ContentValues values= new ContentValues();
+        final ContentValues values = new ContentValues();
         values.put(AlexandriaContract.BookEntry.TITLE, title);
         values.put(AlexandriaContract.BookEntry.IMAGE_URL, imgUrl);
         values.put(AlexandriaContract.AuthorEntry.AUTHOR, author);

@@ -3,100 +3,123 @@ package it.jaschke.alexandria;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.test.AndroidTestCase;
-import android.util.Log;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import it.jaschke.alexandria.data.AlexandriaContract;
-import it.jaschke.alexandria.data.DbHelper;
+
+import static org.assertj.android.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by saj on 23/12/14.
  */
-public class TestProvider extends AndroidTestCase {
+@RunWith(AndroidJUnit4.class)
+public class TestProvider {
     public static final String LOG_TAG = TestProvider.class.getSimpleName();
 
+    @Before
     public void setUp() {
         deleteAllRecords();
     }
 
     public void deleteAllRecords() {
-        mContext.getContentResolver().delete(
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
                 AlexandriaContract.BookEntry.CONTENT_URI,
                 null,
                 null
         );
-        mContext.getContentResolver().delete(
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
                 AlexandriaContract.CategoryEntry.CONTENT_URI,
                 null,
                 null
         );
 
-        mContext.getContentResolver().delete(
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
                 AlexandriaContract.AuthorEntry.CONTENT_URI,
                 null,
                 null
         );
 
-        Cursor cursor = mContext.getContentResolver().query(
+        Cursor cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.BookEntry.CONTENT_URI,
                 null,
                 null,
                 null,
                 null
         );
-        assertEquals(0, cursor.getCount());
+        assertThat(cursor).hasCount(0);
         cursor.close();
 
-        cursor = mContext.getContentResolver().query(
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.AuthorEntry.CONTENT_URI,
                 null,
                 null,
                 null,
                 null
         );
-        assertEquals(0, cursor.getCount());
+        assertThat(cursor).hasCount(0);
         cursor.close();
 
-        cursor = mContext.getContentResolver().query(
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.CategoryEntry.CONTENT_URI,
                 null,
                 null,
                 null,
                 null
         );
-        assertEquals(0, cursor.getCount());
+        assertThat(cursor).hasCount(0);
         cursor.close();
     }
 
+    @Test
     public void testGetType() {
 
-        String type = mContext.getContentResolver().getType(AlexandriaContract.BookEntry.CONTENT_URI);
-        assertEquals(AlexandriaContract.BookEntry.CONTENT_TYPE, type);
+        String type = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .getType(AlexandriaContract.BookEntry.CONTENT_URI);
+        assertThat(AlexandriaContract.BookEntry.CONTENT_TYPE).isEqualTo(type);
 
-        type = mContext.getContentResolver().getType(AlexandriaContract.AuthorEntry.CONTENT_URI);
-        assertEquals(AlexandriaContract.AuthorEntry.CONTENT_TYPE, type);
+        type = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .getType(AlexandriaContract.AuthorEntry.CONTENT_URI);
+        assertThat(AlexandriaContract.AuthorEntry.CONTENT_TYPE).isEqualTo(type);
 
-        type = mContext.getContentResolver().getType(AlexandriaContract.CategoryEntry.CONTENT_URI);
-        assertEquals(AlexandriaContract.CategoryEntry.CONTENT_TYPE, type);
+        type = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .getType(AlexandriaContract.CategoryEntry.CONTENT_URI);
+        assertThat(AlexandriaContract.CategoryEntry.CONTENT_TYPE).isEqualTo(type);
 
         long id = 9780137903955L;
-        type = mContext.getContentResolver().getType(AlexandriaContract.BookEntry.buildBookUri(id));
-        assertEquals(AlexandriaContract.BookEntry.CONTENT_ITEM_TYPE, type);
+        type = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .getType(AlexandriaContract.BookEntry.buildBookUri(id));
+        assertThat(AlexandriaContract.BookEntry.CONTENT_ITEM_TYPE).isEqualTo(type);
 
-        type = mContext.getContentResolver().getType(AlexandriaContract.BookEntry.buildFullBookUri(id));
-        assertEquals(AlexandriaContract.BookEntry.CONTENT_ITEM_TYPE, type);
+        type = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .getType(AlexandriaContract.BookEntry.buildFullBookUri(id));
+        assertThat(AlexandriaContract.BookEntry.CONTENT_ITEM_TYPE).isEqualTo(type);
 
-        type = mContext.getContentResolver().getType(AlexandriaContract.AuthorEntry.buildAuthorUri(id));
-        assertEquals(AlexandriaContract.AuthorEntry.CONTENT_ITEM_TYPE, type);
+        type = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .getType(AlexandriaContract.AuthorEntry.buildAuthorUri(id));
+        assertThat(AlexandriaContract.AuthorEntry.CONTENT_ITEM_TYPE).isEqualTo(type);
 
-        type = mContext.getContentResolver().getType(AlexandriaContract.CategoryEntry.buildCategoryUri(id));
-        assertEquals(AlexandriaContract.CategoryEntry.CONTENT_ITEM_TYPE, type);
+        type = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .getType(AlexandriaContract.CategoryEntry.buildCategoryUri(id));
+        assertThat(AlexandriaContract.CategoryEntry.CONTENT_ITEM_TYPE).isEqualTo(type);
 
     }
 
-    public void testInsertRead(){
+    @Test
+    public void testInsertRead() {
 
         insertReadBook();
         insertReadAuthor();
@@ -106,44 +129,50 @@ public class TestProvider extends AndroidTestCase {
         readFullList();
     }
 
-    public void insertReadBook(){
+    public void insertReadBook() {
         ContentValues bookValues = TestDb.getBookValues();
 
-        Uri bookUri = mContext.getContentResolver().insert(AlexandriaContract.BookEntry.CONTENT_URI, bookValues);
+        Uri bookUri = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .insert(AlexandriaContract.BookEntry.CONTENT_URI, bookValues);
         long bookRowId = ContentUris.parseId(bookUri);
-        assertTrue(bookRowId != -1);
+        assertThat(bookRowId).isNotEqualTo(-1);
 
-        Cursor cursor = mContext.getContentResolver().query(
-                AlexandriaContract.BookEntry.CONTENT_URI,
-                null, // leaving "columns" null just returns all the columns.
-                null, // cols for "where" clause
-                null, // values for "where" clause
-                null  // sort order
-        );
+        Cursor cursor = InstrumentationRegistry.getTargetContext().getContentResolver()
+                .query(
+                        AlexandriaContract.BookEntry.CONTENT_URI,
+                        null, // leaving "columns" null just returns all the columns.
+                        null, // cols for "where" clause
+                        null, // values for "where" clause
+                        null  // sort order
+                );
 
         TestDb.validateCursor(cursor, bookValues);
 
-        cursor = mContext.getContentResolver().query(
-                AlexandriaContract.BookEntry.buildBookUri(bookRowId),
-                null, // leaving "columns" null just returns all the columns.
-                null, // cols for "where" clause
-                null, // values for "where" clause
-                null  // sort order
-        );
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver()
+                .query(
+                        AlexandriaContract.BookEntry.buildBookUri(bookRowId),
+                        null, // leaving "columns" null just returns all the columns.
+                        null, // cols for "where" clause
+                        null, // values for "where" clause
+                        null  // sort order
+                );
 
         TestDb.validateCursor(cursor, bookValues);
 
     }
 
-    public void insertReadAuthor(){
+    public void insertReadAuthor() {
         ContentValues authorValues = TestDb.getAuthorValues();
 
-        Uri authorUri = mContext.getContentResolver().insert(AlexandriaContract.AuthorEntry.CONTENT_URI, authorValues);
+        Uri authorUri = InstrumentationRegistry.getTargetContext()
+                .getContentResolver()
+                .insert(AlexandriaContract.AuthorEntry.CONTENT_URI, authorValues);
         long authorRowId = ContentUris.parseId(authorUri);
-        assertTrue(authorRowId != -1);
-        assertEquals(authorRowId,TestDb.ean);
+        assertThat(authorRowId).isNotEqualTo(-1);
+        assertThat(authorRowId).isEqualTo(TestDb.ean);
 
-        Cursor cursor = mContext.getContentResolver().query(
+        Cursor cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.AuthorEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
@@ -153,7 +182,7 @@ public class TestProvider extends AndroidTestCase {
 
         TestDb.validateCursor(cursor, authorValues);
 
-        cursor = mContext.getContentResolver().query(
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.AuthorEntry.buildAuthorUri(authorRowId),
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
@@ -165,15 +194,15 @@ public class TestProvider extends AndroidTestCase {
 
     }
 
-    public void insertReadCategory(){
+    public void insertReadCategory() {
         ContentValues categoryValues = TestDb.getCategoryValues();
 
-        Uri categoryUri = mContext.getContentResolver().insert(AlexandriaContract.CategoryEntry.CONTENT_URI, categoryValues);
+        Uri categoryUri = InstrumentationRegistry.getTargetContext().getContentResolver().insert(AlexandriaContract.CategoryEntry.CONTENT_URI, categoryValues);
         long categoryRowId = ContentUris.parseId(categoryUri);
-        assertTrue(categoryRowId != -1);
-        assertEquals(categoryRowId,TestDb.ean);
+        assertThat(categoryRowId).isNotEqualTo(-1);
+        assertThat(categoryRowId).isEqualTo(TestDb.ean);
 
-        Cursor cursor = mContext.getContentResolver().query(
+        Cursor cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.CategoryEntry.CONTENT_URI,
                 null, // projection
                 null, // selection
@@ -183,7 +212,7 @@ public class TestProvider extends AndroidTestCase {
 
         TestDb.validateCursor(cursor, categoryValues);
 
-        cursor = mContext.getContentResolver().query(
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.CategoryEntry.buildCategoryUri(categoryRowId),
                 null, // projection
                 null, // selection
@@ -195,9 +224,9 @@ public class TestProvider extends AndroidTestCase {
 
     }
 
-    public void readFullBook(){
+    public void readFullBook() {
 
-        Cursor cursor = mContext.getContentResolver().query(
+        Cursor cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.BookEntry.buildFullBookUri(TestDb.ean),
                 null, // projection
                 null, // selection
@@ -205,12 +234,12 @@ public class TestProvider extends AndroidTestCase {
                 null  // sort order
         );
 
-         TestDb.validateCursor(cursor, TestDb.getFullDetailValues());
+        TestDb.validateCursor(cursor, TestDb.getFullDetailValues());
     }
 
-    public void readFullList(){
+    public void readFullList() {
 
-        Cursor cursor = mContext.getContentResolver().query(
+        Cursor cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 AlexandriaContract.BookEntry.FULL_CONTENT_URI,
                 null, // projection
                 null, // selection
