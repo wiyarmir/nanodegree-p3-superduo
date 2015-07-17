@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,7 +82,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             ean = "978" + ean;
         }
         if (ean.length() < 13) {
-            clearFields();
+            displayToast("Incorrect ISBN code length");
             return;
         }
         //Once we have an ISBN, start a book intent
@@ -90,19 +95,27 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
     @OnClick(R.id.scan_button)
     public void onClickScan(View v) {
-        // This is the callback method that the system will invoke when your button is
-        // clicked. You might do this by launching another app or by including the
-        //functionality directly in this app.
-        // Hint: Use a Try/Catch block to handle the Intent dispatch gracefully, if you
-        // are using an external app.
-        //when you're done, remove the toast below.
-        Context context = getActivity();
-        CharSequence text = "This button should let you scan a book for its barcode!";
-        int duration = Toast.LENGTH_SHORT;
+        IntentIntegrator.forSupportFragment(this)
+                .setCaptureActivity(CustomCaptureActivity.class)
+                .initiateScan();
+    }
 
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                displayToast("Cancelled from fragment");
+            } else {
+                ean.setText(result.getContents());
+            }
+        }
+    }
 
+    private void displayToast(@NonNull String message) {
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+        }
     }
 
     @OnClick(R.id.save_button)
