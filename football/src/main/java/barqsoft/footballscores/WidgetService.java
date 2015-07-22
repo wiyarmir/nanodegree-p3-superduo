@@ -12,12 +12,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created on 17/07/2015.
@@ -34,7 +29,6 @@ public class WidgetService extends RemoteViewsService {
     public class FootballViewsFactory implements RemoteViewsFactory {
         private final Context context;
         private final int appWidgetId;
-        private List<Map<String, String>> dataSet;
         private Cursor cursor;
         private ContentObserver observer;
 
@@ -64,17 +58,8 @@ public class WidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            dataSet = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                dataSet.add(
-                        ImmutableMap.<String, String>builder()
-                                .put("score", Utilies.getScores(
-                                                cursor.getInt(scoresAdapter.COL_HOME_GOALS),
-                                                cursor.getInt(scoresAdapter.COL_AWAY_GOALS))
-                                )
-                                .build()
-                );
-            }
+            onDestroy();
+            onCreate();
         }
 
         @Override
@@ -93,10 +78,15 @@ public class WidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.widget_list_item);
+            cursor.moveToPosition(position);
             Log.d(TAG, "view at " + position);
-            Map<String, String> data = dataSet.get(position);
-            Log.d(TAG, "data: " + data);
-            row.setTextViewText(R.id.score_textview, data.get("score"));
+            row.setTextViewText(
+                    R.id.score_textview,
+                    Utilies.getScores(
+                            cursor.getInt(scoresAdapter.COL_HOME_GOALS),
+                            cursor.getInt(scoresAdapter.COL_AWAY_GOALS)
+                    )
+            );
             return row;
         }
 
