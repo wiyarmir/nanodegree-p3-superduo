@@ -87,6 +87,9 @@ public class WidgetService extends RemoteViewsService {
                             cursor.getInt(scoresAdapter.COL_AWAY_GOALS)
                     )
             );
+
+            row.setTextViewText(R.id.home_name, cursor.getString(scoresAdapter.COL_HOME));
+            row.setTextViewText(R.id.away_name, cursor.getString(scoresAdapter.COL_AWAY));
             return row;
         }
 
