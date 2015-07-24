@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Resultados Fúbol</string>
+    <string name="about">Acerca de</string>
+    <string name="about_text"></string>
+    <string name="about_text_description">Acerca de esta aplicación y de sus autores</string>
+    <string name="action_settings">Preferencias</string>
+    <string name="away_crest_description">Escudo del equipo visitante</string>
+    <string name="away_name_description">Nombre del equipo visitante</string>
+    <string name="data_text_description">Día del partido</string>
+    <string name="final_text">Final</string>
+    <string name="first_knockout_round">Primera eliminatoria</string>
+    <string name="group_stage_text">Fase de grupos</string>
+    <string name="home_crest_description">Escudo del equipo local</string>
+    <string name="home_name_description">Nombre del equipo local</string>
+    <string name="league_textview_description">Liga del partido</string>
+    <string name="matchday_text">Día del partido</string>
+    <string name="matchday_textview_description">Momento cuando el partido tiene lugar</string>
+    <string name="quarter_final">Cuartos de final</string>
+    <string name="score_text_description">Resultado del partido</string>
+    <string name="semi_final">Semifinal</string>
+    <string name="seriaa">Serie A</string>
+    <string name="share_button_description">Compartir resultado del partido</string>
+    <string name="share_text">Compartir</string>
+    <string name="test_text" translatable="false"></string>
+    <string name="title_activity_about">Acerca De</string>
+    <string name="today">Hoy</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="visitor_crest_description">Escudo del equipo visitante</string>
+    <string name="widget_header_text">Partidos del día</string>
+    <string name="yesterday">Ayer</string>
+</resources>
