@@ -32,7 +32,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    tools:src="@drawable/no_icon"/>
+                    tools:src="@drawable/no_icon"
+                    android:contentDescription="Home team crest"/>
 
                 <TextView
                     android:id="@+id/home_name"
@@ -82,7 +83,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    tools:src="@drawable/no_icon"/>
+                    tools:src="@drawable/no_icon"
+                    android:contentDescription="Visitor team crest"/>
 
                 <TextView
                     android:id="@+id/away_name"

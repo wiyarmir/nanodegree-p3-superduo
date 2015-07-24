@@ -15,7 +15,7 @@
         android:background="@drawable/list_item"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Matches today"
+        android:text="@string/widget_header_text"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black"/>
 

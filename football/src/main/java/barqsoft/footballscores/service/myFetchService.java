@@ -63,7 +63,7 @@ public class myFetchService extends IntentService {
 
             // Read the input stream into a String
             InputStream inputStream = m_connection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 // Nothing to do.
                 return;
@@ -75,7 +75,8 @@ public class myFetchService extends IntentService {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.
-                buffer.append(line + "\n");
+                buffer.append(line)
+                        .append("\n");
             }
 
             if (buffer.length() == 0) {
@@ -157,7 +158,7 @@ public class myFetchService extends IntentService {
 
 
             //ContentValues to be inserted
-            Vector<ContentValues> values = new Vector<ContentValues>(matches.length());
+            Vector<ContentValues> values = new Vector<>(matches.length());
             for (int i = 0; i < matches.length(); i++) {
                 JSONObject match_data = matches.getJSONObject(i);
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).

@@ -1,5 +1,6 @@
 package barqsoft.footballscores;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -24,6 +25,12 @@ public class ScoresAppWidgetProvider extends AppWidgetProvider {
             // Non-deprecated version requires API>14
             //noinspection deprecation
             widget.setRemoteAdapter(appWidgetId, R.id.scores_list, svcIntent);
+
+            Intent action = new Intent(context, MainActivity.class);
+            widget.setPendingIntentTemplate(
+                    R.id.scores_list,
+                    PendingIntent.getActivity(context, 0, action, PendingIntent.FLAG_UPDATE_CURRENT)
+            );
 
             appWidgetManager.updateAppWidget(appWidgetId, widget);
         }

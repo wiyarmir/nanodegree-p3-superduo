@@ -1,5 +1,6 @@
 package barqsoft.footballscores;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -90,6 +91,23 @@ public class WidgetService extends RemoteViewsService {
 
             row.setTextViewText(R.id.home_name, cursor.getString(scoresAdapter.COL_HOME));
             row.setTextViewText(R.id.away_name, cursor.getString(scoresAdapter.COL_AWAY));
+
+
+            row.setTextViewText(R.id.data_textview, cursor.getString(scoresAdapter.COL_MATCHTIME));
+
+            Intent fillInIntent = new Intent();
+            row.setOnClickFillInIntent(R.id.list_item, fillInIntent);
+
+            row.setImageViewResource(R.id.home_crest,
+                    Utilies.getTeamCrestByTeamName(
+                            cursor.getString(scoresAdapter.COL_HOME)
+                    )
+            );
+            row.setImageViewResource(R.id.away_crest,
+                    Utilies.getTeamCrestByTeamName(
+                            cursor.getString(scoresAdapter.COL_AWAY)
+                    )
+            );
             return row;
         }
 
