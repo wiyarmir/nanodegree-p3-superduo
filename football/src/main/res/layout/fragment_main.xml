@@ -2,13 +2,11 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:layout_marginLeft="@dimen/list_horizonal_matgin"
-             android:layout_marginRight="@dimen/list_horizonal_matgin"
              android:paddingBottom="@dimen/activity_vertical_margin"
-             android:paddingLeft="@dimen/activity_horizontal_margin"
-             android:paddingRight="@dimen/activity_horizontal_margin"
              android:paddingTop="@dimen/activity_vertical_margin"
-             tools:context=".MainActivity$PlaceholderFragment">
+             tools:context=".MainActivity$PlaceholderFragment"
+             style="@style/fragment_spacing">
+    <!-- Doesn't really make sense to use paddingStart/End since it's the same padding in both-->
 
     <ListView
         android:id="@+id/scores_list"

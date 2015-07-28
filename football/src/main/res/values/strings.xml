@@ -33,6 +33,7 @@
     </string>
 
     <string name="widget_header_text">Matches today</string>
+    <string name="widget_header_description">Matches today</string>
     <string name="share_button_description">Share score of the match</string>
     <string name="league_textview_description">League the match belongs to</string>
     <string name="matchday_textview_description">Match day</string>

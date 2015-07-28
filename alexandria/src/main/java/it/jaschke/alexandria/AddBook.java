@@ -75,11 +75,14 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void afterTextChanged(Editable s) {
         eanEditText.setError(null);
         String ean = s.toString();
+        if (ean.isEmpty()) {
+            return;
+        }
         //catch isbn10 numbers
         if (ean.length() == 10 && !ean.startsWith("978")) {
             ean = "978" + ean;
         }
-        if (ean.length() !=  13) {
+        if (ean.length() != 13) {
             eanEditText.setError("Incorrect ISBN length.");
         }
         //Once we have an ISBN, start a book intent
@@ -118,6 +121,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     @OnClick(R.id.save_button)
     public void onClickSave(View view) {
         eanEditText.setText("");
+        clearFields();
     }
 
 
@@ -128,6 +132,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         bookIntent.setAction(BookService.DELETE_BOOK);
         getActivity().startService(bookIntent);
         eanEditText.setText("");
+        clearFields();
     }
 
     private void restartLoader() {

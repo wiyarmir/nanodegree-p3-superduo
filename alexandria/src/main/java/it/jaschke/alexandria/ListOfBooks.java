@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     @Bind(R.id.listOfBooks) ListView bookList;
     private int position = ListView.INVALID_POSITION;
     @Bind(R.id.searchText) SearchView searchText;
+    @Bind(android.R.id.empty) TextView emptyList;
 
     private final int LOADER_ID = 10;
 
@@ -70,6 +72,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         });
 
         bookList.setAdapter(bookListAdapter);
+        bookList.setEmptyView(emptyList);
 
 
         return rootView;

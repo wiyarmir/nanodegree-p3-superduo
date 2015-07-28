@@ -7,6 +7,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="barqsoft.footballscores.AboutActivity$PlaceholderFragment">
+    <!-- Doesn't really make sense to use paddingStart/End since it's the same padding in both-->
 
     <TextView
         android:layout_width="wrap_content"

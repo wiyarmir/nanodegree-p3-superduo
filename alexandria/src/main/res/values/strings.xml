@@ -28,4 +28,5 @@
 
     <string name="about_text">This application gets book information from a Google API. All titles, cover images, and author information come from there.
     The original version of this app was built by Sascha Jaschke, and modified by Guillermo Orellana as part of the Android Nanodegree program at Udacity. </string>
+    <string name="booklist_empty">No books saved</string>
 </resources>
