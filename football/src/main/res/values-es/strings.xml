@@ -22,11 +22,11 @@
     <string name="seriaa">Serie A</string>
     <string name="share_button_description">Compartir resultado del partido</string>
     <string name="share_text">Compartir</string>
-    <string name="test_text" translatable="false"></string>
     <string name="title_activity_about">Acerca De</string>
     <string name="today">Hoy</string>
     <string name="tomorrow">Mañana</string>
     <string name="visitor_crest_description">Escudo del equipo visitante</string>
     <string name="widget_header_text">Partidos del día</string>
     <string name="yesterday">Ayer</string>
+    <string name="widget_header_description">Partidos del día</string>
 </resources>
