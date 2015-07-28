@@ -82,6 +82,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         }
         if (ean.length() != 13) {
             eanEditText.setError("Incorrect ISBN length.");
+            return;
         }
         //Once we have an ISBN, start a book intent
         Intent bookIntent = new Intent(getActivity(), BookService.class);
